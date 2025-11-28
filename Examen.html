@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Selección de Personaje - Multiverso Observer</title>
+
+<!-- Tipografía tipo videojuego -->
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    background: radial-gradient(circle at center, #0a0a14, #060606 90%);
+    color: #fff;
+    font-family: 'Orbitron', sans-serif;
+    display: flex;
+    flex-direction: column;
+  }
+
+  header {
+    text-align: center;
+    padding: 20px;
+    font-size: 35px;
+    letter-spacing: 3px;
+    text-shadow: 0 0 10px #fff;
+  }
+
+  .main-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Panel izquierdo con scroll */
+  .grid-container {
+    width: 50%;
+    background: rgba(15, 15, 25, 0.8);
+    border-right: 2px solid #333;
+    overflow-y: auto;
+    padding: 20px 0;
+    padding-bottom: 300px;
+  }
+
+  .grid-container::-webkit-scrollbar {
+    width: 10px;
+  }
+  .grid-container::-webkit-scrollbar-track {
+    background: #111;
+  }
+  .grid-container::-webkit-scrollbar-thumb {
+    background: #8000ff;
+    border-radius: 5px;
+  }
+  .grid-container::-webkit-scrollbar-thumb:hover {
+    background: #b14cff;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 25px;
+    width: 85%;
+    margin: 0 auto;
+  }
+
+  .character {
+    background-color: #1a1a1a;
+    border: 3px solid #444;
+    border-radius: 10px;
+    text-align: center;
+    padding: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .character img {
+    width: 100%;
+    border-radius: 8px;
+    opacity: 0.9;
+    flex-grow: 1;
+    object-fit: cover;
+  }
+
+  .character p {
+    margin-top: 8px;
+    font-size: 14px;
+  }
+
+  .character:hover {
+    transform: scale(1.05);
+    border-color: #ffffff;
+  }
+
+  .character.selected {
+    box-shadow: 0 0 25px 8px currentColor;
+    border-color: currentColor;
+    transform: scale(1.08);
+    animation: pulse 1.5s infinite alternate;
+  }
+
+  @keyframes pulse {
+    from { box-shadow: 0 0 15px 4px currentColor; }
+    to { box-shadow: 0 0 35px 10px currentColor; }
+  }
+
+  /* PANEL DERECHO */
+  .detail-container {
+    width: 40%;
+    background: rgba(10, 10, 20, 0.9);
+    padding: 20px;
+    display: flex;
+  }
+
+  /* Scroll aquí */
+  .detail-scroll {
+    width: 100%;
+    overflow-y: auto;
+    padding-right: 100px;
+    padding-bottom: 300px;
+  }
+
+  .detail-scroll::-webkit-scrollbar {
+    width: 10px;
+  }
+  .detail-scroll::-webkit-scrollbar-track {
+    background: #111;
+  }
+  .detail-scroll::-webkit-scrollbar-thumb {
+    background: #8000ff;
+    border-radius: 5px;
+  }
+  .detail-scroll::-webkit-scrollbar-thumb:hover {
+    background: #b14cff;
+  }
+
+  .detail {
+    text-align: center;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+
+  .detail h2 {
+    font-size: 30px;
+    margin-bottom: 10px;
+    text-shadow: 0 0 12px currentColor;
+  }
+
+  .detail img {
+    width: 300px;
+    border-radius: 10px;
+    border: 2px solid #555;
+    margin: 20px 0;
+    box-shadow: 0 0 15px #000;
+  }
+
+  .lore {
+    font-size: 15px;
+    color: #8000ff;
+    text-align: justify;
+    line-height: 1.5;
+  }
+
+  /* Contenedor del modelo 3D */
+  #modelContainer {
+    width: 100%;
+    height: 300px;
+    margin-top: 25px;
+    border: 2px solid #333;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 0 10px #000;
+  }
+
+  #modelViewer {
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+
+</style>
+</head>
+<body>
+
+<header>SELECCIÓN DE PERSONAJE // OBSERVER MULTIVERSE</header>
+
+<div class="main-container">
+
+  <!-- Panel Izquierdo -->
+  <div class="grid-container">
+    <div class="grid" id="characterGrid"></div>
+  </div>
+
+  <!-- Panel Derecho con scroll -->
+  <div class="detail-container">
+    <div class="detail-scroll">
+      <div class="detail" id="characterDetail">
+
+        <h2 id="charName">Selecciona un personaje</h2>
+
+        <img id="charImage" src="" alt="">
+
+        <p class="lore" id="charLore">Haz clic en un personaje para ver su información detallada.</p>
+
+        <!-- MODELO 3D -->
+        <div id="modelContainer">
+          <iframe id="modelViewer"
+            src=""
+            allow="autoplay; fullscreen; xr-spatial-tracking"
+            allowfullscreen
+          ></iframe>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const characters = [
+  {
+    name: "Observer",
+    color: "#8000ff",
+    image: "img/rostro-observer.jpg",
+    hoverImage: "img/observer.jpg",
+    selectedImage: "img/observer.jpg",
+    lore: "Entidad que observa el multiverso de Undertale... jajaja siempre va por el pan",
+    model: "https://sketchfab.com/3d-models/melon-bread-52cd48ba01084e0dba1ad5834bc14919/embed"
+  },
+  {
+    name: "Bright",
+    color: "#ffe500",
+    image: "img/bright-rostro.jpg",
+    hoverImage: "img/brigth.jpg",
+    selectedImage: "img/brigth.jpg",
+    lore: "Portador de la luz del conocimiento... fanático de los pasteles de limón (son doritos jaja)",
+    model: "https://sketchfab.com/3d-models/8490d24e-a612-412f-b6d6-0eeeb5747630-77244b4b3ec14c3f85f064227d87bfc3/embed"
+  },
+  {
+    name: "Player",
+    color: "#ff78c2",
+    image: "img/player1.jpg",
+    hoverImage: "img/player.jpg",
+    selectedImage: "img/player.jpg",
+    lore: "El eco del alma humana...la loca de los pasteles de calabaza",
+    model: "https://sketchfab.com/3d-models/pumpkin-pie-slice-with-whipped-cream-be28d682a52a4d0b95d3310bad2f0c64/embed"
+  },
+  {
+    name: "Null",
+    color: "#9ddfff",
+    image: "img/null1.jpg",
+    hoverImage: "img/null.jpg",
+    selectedImage: "img/null.jpg",
+    lore: "La nada hecha conciencia...callado pero mira que ya adora las galletas de gato",
+    model: "https://sketchfab.com/3d-models/gato-galleta-cookie-cat-fd5c12450ed64b98b1e6cd1503d07c2d/embed"
+  },
+  {
+    name: "Consillium",
+    color: "#009dff",
+    image: "img/consilium.jpg",
+    hoverImage: "img/consi.jpg",
+    selectedImage: "img/consi.jpg",
+    lore: "Consejero del vacío... siempre con una galleta en mano",
+    model: "https://sketchfab.com/3d-models/cookie-realista-f32baa1e83684842a155e6e1a0c5fbab/embed"
+  },
+  {
+    name: "Chara // SYS-00",
+    color: "#b19cd9",
+    image: "img/sys-00.jpg",
+    hoverImage: "img/sys.jpg",
+    selectedImage: "img/sys.jpg",
+    lore: "Una versión reconfigurada de Chara... pero siempre con hambre de panqueques",
+    model: "https://sketchfab.com/3d-models/panqueque-gato-cat-shaped-pancakes-1-c943e1264ee84ac19f4899ab189551d0/embed"
+  },
+  {
+    name: "Paraflawey",
+    color: "#b14c8e",
+    image: "img/paraflawey1.jpg",
+    hoverImage: "img/paraflawey.jpg",
+    selectedImage: "img/paraflawey.jpg",
+    lore: "Una flor distorsionada por la corrupción... con fijacion por la pasta",
+    model: "https://sketchfab.com/3d-models/pasta-with-meatballs-and-sausage-047a5a885ce144969ea49984f657062a/embed"
+  },
+  {
+    name: "Noir",
+    color: "#b49eff",
+    image: "img/noir1.jpg",
+    hoverImage: "img/noir.jpg",
+    selectedImage: "img/noir.jpg",
+    lore: "Guardián del silencio...   y amante de los melones (jaja lo suena mal)",
+    model: "https://sketchfab.com/3d-models/melon-plate-e0bc6e5c11974572acdff645eada7edb/embed"
+  },
+  {
+    name: "Somber",
+    color: "#9ed0ff",
+    image: "img/somber1.jpg",
+    hoverImage: "img/somber.jpg",
+    selectedImage: "img/somber.jpg",
+    lore: "Reflejo de la tristeza universal... y fanática de los pasteles",
+    model: "https://sketchfab.com/3d-models/3d-sketchbook-4---pie-0dbe497e7116461dbe97256786e7ecf1/embed"
+  },
+  {
+    name: "Coder",
+    color: "#ff3b3b",
+    image: "img/coder1.jpg",
+    hoverImage: "img/coder.jpg",
+    selectedImage: "img/coder.jpg",
+    lore: "Infección viviente del sistema...la comida chatarra es su segunda habilidad ",
+    model: "https://sketchfab.com/3d-models/comida-3d-790d0cba1bde49f79bf6e3d7b92f8bd1/embed"
+  }
+];
+
+const grid = document.getElementById('characterGrid');
+const charName = document.getElementById('charName');
+const charImage = document.getElementById('charImage');
+const charLore = document.getElementById('charLore');
+const modelViewer = document.getElementById('modelViewer');
+
+characters.forEach((char, index) => {
+  const div = document.createElement('div');
+  div.classList.add('character');
+  div.style.color = char.color;
+  div.innerHTML = `
+    <img src="${char.image}" alt="${char.name}">
+    <p>${char.name}</p>
+  `;
+
+  div.addEventListener('mouseenter', () => {
+    div.querySelector('img').src = char.hoverImage;
+  });
+  div.addEventListener('mouseleave', () => {
+    div.querySelector('img').src = char.image;
+  });
+
+  div.addEventListener('click', () => selectCharacter(index));
+  grid.appendChild(div);
+});
+
+function selectCharacter(index) {
+  document.querySelectorAll('.character').forEach(c => c.classList.remove('selected'));
+  const selected = document.querySelectorAll('.character')[index];
+  selected.classList.add('selected');
+  selected.style.color = characters[index].color;
+
+  const char = characters[index];
+  charName.textContent = char.name;
+  charName.style.color = char.color;
+  charImage.src = char.selectedImage;
+  charLore.textContent = char.lore;
+
+  // Cambiar modelo 3D
+  modelViewer.src = char.model;
+}
+
+selectCharacter(0);
+</script>
+
+</body>
+</html>
